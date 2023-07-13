@@ -1,98 +1,96 @@
-
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 $(function () {
+
+
   const timeBlocks = [
   { // 9AM
     id: "hour-9",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "9AM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true",
-    time: "9"
+    time: 9
   },
   { //10 AM
     id: "hour-10",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "10AM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true",
-    time: "10"
+    time: 10
   },
   { //11 AM
     id: "hour-11",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "11AM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true" ,
-    time: "11"
+    time: 11
   },
   { //12 PM
     id: "hour-12",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "12PM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true" ,
-    time: "12"
+    time: 12
   },
   { //13 PM
     id: "hour-13",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "1PM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true" ,
-    time: "13"
+    time: 13
   },
   { //14 PM
     id: "hour-14",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "2PM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true" ,
-    time: "14"
+    time: 14
   },
   { //15 PM
     id: "hour-15",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "3PM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true" ,
-    time: "15"
+    time: 15
   },
   { //16 PM
     id: "hour-16",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "4PM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true" ,
-    time: "16"
+    time: 16
   },
   { //17 PM
     id: "hour-17",
-    class: "row time-block future",
+    class: "row time-block",
     timeClass: "col-2 col-md-1 hour text-center py-3",
     hour: "5PM",
     textarea: "col-8 col-md-10 description rows = 3",
     button: "btn saveBtn col-2 col-md-1 ariaLabel = save",
     eye: "fas fa-save ariaHidden = true" ,
-    time: "17"
+    time: 17
   }
   ]
 
@@ -107,54 +105,63 @@ $(function () {
       const eyes = $("<i>").addClass(timeBlocks[i].eye);
       
       $("#block").append(divTag.append(divTime,textArea,button.append(eyes))) ;
-      
-      // console.log(timeBlocks[i]);
-      function checkTime () {
-        const timeOfDay = dayjs().hour() ;
-        for (let x = 0; x < timeBlocks.length; x++ ) {
-          // console.log(timeBlocks[x].time)
-          // console.log(timeOfDay)
-    
-          if (timeOfDay === timeBlocks[x].time) {
-            divTag.removeClass("future").addClass("present")
-          }  else if ( timeOfDay > timeBlocks[x].time ) {
-            divTag.removeClass("future").addClass("past")
-        }}
+      const timeOfDay = dayjs().hour() ;
+      const timeVar = timeBlocks[i].time
+      // console.log(timeOfDay)
+      // console.log(timeVar)
+          
+      // loops over past present and future
+      if (timeOfDay == timeVar) {
+        // console.log(timeOfDay)
+        // console.log(divTag )
+        divTag.addClass("present") ;
+            
+      } else if ( timeOfDay < timeVar ) {
+        console.log(timeVar)
+        divTag.addClass("future")
+      } else if ( timeOfDay > timeVar) {
+        divTag.addClass("past");
       }
-      checkTime() ;
     }
     }
   addBlocks() ;
   
-  $("btn").click(saveEvent)
+  const memoryArr = [] || parsedMemories
 
+  const button = $(":button")
+  button.on("click",saveEvent)
 
   function saveEvent () {
-    const blockId = timeBlocks(this).id ;
-    const textContent = $("<textarea>") ;
-    const localStor = localStorage.setItem("id", "text")
-
-    localStor(blockId, textContent.val(this)) 
-    console.log(textContent.val(this))
+    const text = $(this).prev().val() ;
+    const timeId = $(this).parent().text();
     
+    // memoryArr.push(timeId, text)
+    // console.log(memoryArr)
+    // setStorage();
+    localStorage.setItem(timeId , text) ;
   }
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
+  function setStorage(){
+    const stringifiedMemory = JSON.stringify(memoryArr)
+
+    getStorage()
+  }
+
+  function getStorage() {
+
+    for (let i = 9; i < 18; i++) {
+      if (i < 12) {
+        $(`#hour-${i} textarea`).val(localStorage.getItem(`${i}AM`))
+      } else if (i === 12 ) {
+        $(`#hour-${i} textarea`).val(localStorage.getItem(`${i}PM`))
+      } else {
+        let j = i - 12 ;
+        $(`#hour-${i} textarea`).val(localStorage.getItem(`${j}PM`))
+      }
+      
+      
+    }
+  }
+  getStorage();
 function showToday () {
 var today = dayjs();
 // console.log(today)
